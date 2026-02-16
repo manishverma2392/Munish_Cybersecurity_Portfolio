@@ -1,0 +1,8 @@
+// Detection: Multiple Failed Login Attempts from the Same IP
+// Purpose: Identify potential brute-force or password-spraying activity
+
+SigninLogs
+| where ResultType != 0
+| summarize FailedAttempts = count() by IPAddress, UserPrincipalName, bin(TimeGenerated, 15m)
+| where FailedAttempts >= 5
+| sort by FailedAttempts desc
