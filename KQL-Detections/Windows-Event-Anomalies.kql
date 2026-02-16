@@ -1,0 +1,9 @@
+// Detection: Windows Security Event Anomalies
+// Purpose: Identify unusual or suspicious Windows security events
+
+SecurityEvent
+| where EventID in (4625, 4648, 4672, 4688, 4697)
+| extend Account = tostring(Account)
+| summarize Count = count() by EventID, Account, bin(TimeGenerated, 30m)
+| where Count > 10
+| sort by Count desc
