@@ -1,0 +1,9 @@
+// Detection: Privilege Escalation Attempts
+// Purpose: Identify users attempting to add themselves or others to privileged groups
+
+AuditLogs
+| where OperationName in ("Add member to role", "Add user to group")
+| extend TargetGroup = tostring(TargetResources[0].displayName)
+| where TargetGroup in ("Global Administrator", "Privileged Role Administrator", "User Administrator", "Security Administrator")
+| project TimeGenerated, InitiatedBy = tostring(InitiatedBy.user.userPrincipalName), TargetGroup, ModifiedUser = tostring(TargetResources[0].userPrincipalName), OperationName
+| sort by TimeGenerated desc
