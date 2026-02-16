@@ -1,0 +1,6 @@
+SecurityEvent
+| where EventID == 4104
+| where ScriptBlockText contains "Invoke-WebRequest"
+    or ScriptBlockText contains "DownloadString"
+    or ScriptBlockText contains "IEX"
+| project TimeGenerated, Computer, Account, ScriptBlockText
